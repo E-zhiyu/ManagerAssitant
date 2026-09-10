@@ -16,7 +16,7 @@ import androidx.work.WorkManager;
 
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.color.DynamicColorsOptions;
-import com.sly.coffer.automation.workers.BackupWorker;
+import com.sly.coffer.automation.workers.backup.BackupWorker;
 import com.sly.coffer.auxiliary.enums.TagStrings;
 import com.sly.coffer.auxiliary.enums.settings.AuthOpportunity;
 import com.sly.coffer.data.save.preference.AutoBackupPreference;
