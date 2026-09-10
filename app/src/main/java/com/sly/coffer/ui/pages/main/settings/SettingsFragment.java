@@ -19,6 +19,7 @@ import com.sly.coffer.R;
 import com.sly.coffer.auxiliary.enums.RadiusStyle;
 import com.sly.coffer.data.save.preference.MediaPreference;
 import com.sly.coffer.data.save.preference.SecurityPreference;
+import com.sly.coffer.data.save.preference.VersionPreference;
 import com.sly.coffer.databinding.FragmentSettingsBinding;
 import com.sly.coffer.auxiliary.enums.settings.AuthOpportunity;
 import com.sly.coffer.auxiliary.enums.settings.FirstScreen;
@@ -117,7 +118,7 @@ public class SettingsFragment extends Fragment {
                 R.string.select_first_screen,
                 "选择启动的第一屏",
                 R.drawable.outline_mobile_24,
-                RadiusStyle.BOTTOM
+                RadiusStyle.MIDDLE
         );
         int screenCode = AppSettingsPreference.getFirstScreen(requireContext());
         firstScreenOption.setSpinnerText(FirstScreen.values()[screenCode].getTitle());
@@ -153,6 +154,20 @@ public class SettingsFragment extends Fragment {
 
             firstScreenMenu.show();
         });
+
+        //自动检测更新
+        SettingSwitchView autoUpdateCheck = new SettingSwitchView(
+                requireContext(),
+                binding.autoUpdateCheckSwitch,
+                R.string.auto_update_check,
+                "应用启动后自动检查更新",
+                R.drawable.outline_deployed_code_update_24,
+                RadiusStyle.BOTTOM
+        );
+        autoUpdateCheck.setChecked(VersionPreference.getAutoUpdateCheck(requireContext()));
+        autoUpdateCheck.setFunctionListener((compoundButton, b) ->
+                VersionPreference.setAutoUpdateCheck(requireContext(), b)
+        );
     }
 
     /**
