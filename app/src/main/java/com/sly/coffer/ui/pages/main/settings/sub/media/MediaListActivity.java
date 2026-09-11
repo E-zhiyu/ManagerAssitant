@@ -28,6 +28,7 @@ import com.sly.coffer.databinding.ActivityMediaListBinding;
 import com.sly.coffer.helpers.ExceptionHelper;
 import com.sly.coffer.helpers.appearence.AppearanceHelper;
 import com.sly.coffer.helpers.appearence.VisibilityHelper;
+import com.sly.coffer.helpers.file.FileHelper;
 import com.sly.coffer.ui.pages.media.FullScreenMediaActivity;
 
 import java.io.File;
@@ -254,6 +255,7 @@ public class MediaListActivity extends AppCompatActivity {
                             long originSize = Files.readAttributes(originFile.toPath(), BasicFileAttributes.class).size();
                             long newSize = Files.readAttributes(file.toPath(), BasicFileAttributes.class).size();
                             if (originSize <= newSize) {
+                                FileHelper.clearMediaTempDir(MediaListActivity.this);
                                 Log.w(LogTags.MEDIA_LIST_ACTIVITY.n(), "压缩后大小无变化或者更大");
                                 Toast.makeText(MediaListActivity.this, "压缩失败：压缩后体积没有变小", Toast.LENGTH_SHORT).show();
                                 return;
@@ -273,13 +275,16 @@ public class MediaListActivity extends AppCompatActivity {
                             viewModel.setInOrder(viewModel.isInOrder());
 
                             Toast.makeText(MediaListActivity.this, "压缩成功", Toast.LENGTH_SHORT).show();
+                            FileHelper.clearMediaTempDir(MediaListActivity.this);
                         } catch (IOException e) {
+                            FileHelper.clearMediaTempDir(MediaListActivity.this);
                             ExceptionHelper.showExceptionDialog(MediaListActivity.this, e);
                         }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable throwable) {
+                        FileHelper.clearMediaTempDir(MediaListActivity.this);
                         Toast.makeText(MediaListActivity.this, "压缩失败", Toast.LENGTH_SHORT).show();
                     }
                 })
