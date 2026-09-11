@@ -33,6 +33,7 @@ mapstruct = "1.6.3"
 recyclerviewSelection = "1.2.0"
 lifecycleProcess = "2.10.0"
 activityKtx = "1.13.0"
+lubanVersion = "2.0.2"
 
 [libraries]
 core = { module = "io.noties.markwon:core", version.ref = "core" }
@@ -71,6 +72,7 @@ recyclerview-selection = { group = "androidx.recyclerview", name = "recyclerview
 work-rxjava3 = { module = "androidx.work:work-rxjava3", version.ref = "workRuntime" }
 lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycleProcess" }
 activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
+zibin-luban = { module = "top.zibin:luban", version.ref = "lubanVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
