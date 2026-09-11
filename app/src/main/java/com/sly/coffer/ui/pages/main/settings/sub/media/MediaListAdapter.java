@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.sly.coffer.R;
 import com.sly.coffer.auxiliary.classes.MediaFileInfo;
 import com.sly.coffer.auxiliary.enums.DirectoryPaths;
+import com.sly.coffer.auxiliary.interfaces.adapter.AdapterOnLongClickListener;
 import com.sly.coffer.auxiliary.interfaces.adapter.ViewHolderListener;
 import com.sly.coffer.databinding.ViewHolderMediaListBinding;
 import com.sly.coffer.helpers.TextHelper;
@@ -40,6 +41,7 @@ public class MediaListAdapter extends ListAdapter<MediaFileInfo, MediaListAdapte
         }
     };
     private final OnClickListener clickListener;
+    private final AdapterOnLongClickListener<MediaFileInfo> longClickListener;
     private final RequestOptions glideOptions;          //图片显示设置
 
     public interface OnClickListener {
@@ -62,12 +64,19 @@ public class MediaListAdapter extends ListAdapter<MediaFileInfo, MediaListAdapte
 
             //绑定点击监听
             binding.getRoot().setOnClickListener(view -> listener.onClick(getBindingAdapterPosition(), binding.getRoot()));
+
+            //绑定长按监听
+            binding.getRoot().setOnLongClickListener(view -> {
+                listener.onLongClick(getBindingAdapterPosition(), binding.getRoot());
+                return true;
+            });
         }
     }
 
-    public MediaListAdapter(Context context, OnClickListener clickListener) {
+    public MediaListAdapter(Context context, OnClickListener clickListener, AdapterOnLongClickListener<MediaFileInfo> longClickListener) {
         super(ITEM_CALLBACK);
         this.clickListener = clickListener;
+        this.longClickListener = longClickListener;
 
         //初始化Glide设置
         glideOptions = new RequestOptions()
@@ -101,6 +110,8 @@ public class MediaListAdapter extends ListAdapter<MediaFileInfo, MediaListAdapte
 
                     @Override
                     public void onLongClick(int pos, View anchor) {
+                        MediaFileInfo info = getItem(pos);
+                        longClickListener.onLongClick(info, anchor);
                     }
 
                     @Override

@@ -212,6 +212,7 @@
     <string name="from_small_to_large">从小到大</string>
     <string name="from_large_to_small">从大到小</string>
     <string name="auto_update_check">自动更新检测</string>
+    <string name="compress">压缩</string>
 
     <string-array name="tips_array">
         <item>如果设置了自动备份目录，进行软件更新时会自动备份一次。</item>
