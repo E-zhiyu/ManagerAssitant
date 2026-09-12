@@ -27,6 +27,7 @@ import com.sly.coffer.auxiliary.enums.LogTags;
 import com.sly.coffer.auxiliary.enums.settings.BackupFrequency;
 import com.sly.coffer.helpers.NotificationHelper;
 import com.sly.coffer.automation.workers.WorkerScheduler;
+import com.sly.coffer.helpers.ShortcutHelper;
 import com.sly.coffer.helpers.appearence.ThemeHelper;
 import com.sly.coffer.helpers.file.FileHelper;
 import com.sly.coffer.helpers.time.AlarmHelper;
@@ -45,8 +46,9 @@ public class SlyCoffer extends Application {
         //注册预算重置检查闹钟
         AlarmHelper.setBudgetCheckAlarm(this);
 
-        //注册通知渠道
+        //动态注册（通知渠道、快捷方式）
         NotificationHelper.createNotificationChannels(this);
+        ShortcutHelper.buildShortcuts(this);
 
         if (getProcessName().equals(getPackageName())) {
             //初始化动态配色
