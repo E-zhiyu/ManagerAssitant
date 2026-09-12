@@ -33,7 +33,7 @@ public class ExceptionHelper {
      */
     private static void copyToClipboard(@NonNull Context context, String text) {
         //获取系统剪贴板服务
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager clipboard = context.getSystemService(ClipboardManager.class);
 
         //创建 ClipData 对象
         ClipData clip = ClipData.newPlainText("经理助手错误信息", text);

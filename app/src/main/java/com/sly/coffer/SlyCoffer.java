@@ -130,7 +130,7 @@ public class SlyCoffer extends Application {
      */
     private void removeTaskFromRecents() {
         Log.d(LogTags.APPLICATION.n(), "触发最近任务隐藏");
-        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager am = getSystemService(ActivityManager.class);
         if (am != null) {
             List<ActivityManager.AppTask> taskList = am.getAppTasks();
             if (taskList != null) {
