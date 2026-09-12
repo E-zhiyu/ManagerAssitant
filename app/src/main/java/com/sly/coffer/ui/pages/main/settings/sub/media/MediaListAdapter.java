@@ -16,13 +16,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.sly.coffer.R;
 import com.sly.coffer.auxiliary.classes.MediaFileInfo;
-import com.sly.coffer.auxiliary.enums.DirectoryPaths;
 import com.sly.coffer.auxiliary.interfaces.adapter.AdapterOnLongClickListener;
 import com.sly.coffer.auxiliary.interfaces.adapter.ViewHolderListener;
 import com.sly.coffer.databinding.ViewHolderMediaListBinding;
 import com.sly.coffer.helpers.TextHelper;
 import com.sly.coffer.helpers.appearence.AppearanceHelper;
-import com.sly.coffer.helpers.file.FileHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -128,7 +126,7 @@ public class MediaListAdapter extends ListAdapter<MediaFileInfo, MediaListAdapte
 
         //通过 Glide 显示图片
         Glide.with(holder.itemView.getContext())
-                .load(FileHelper.redirectFileFromUri(info.getUri(), DirectoryPaths.MEDIA, holder.itemView.getContext()))
+                .load(info.getUri())
                 .apply(glideOptions)
                 .into(holder.binding.imageView);
 
