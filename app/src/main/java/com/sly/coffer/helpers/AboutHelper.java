@@ -10,7 +10,7 @@ import com.sly.coffer.R;
 import com.sly.coffer.ui.others.dialogs.MarkdownDialogBuilder;
 
 public class AboutHelper {
-    private static final String UPDATE_LOG_MD = "# v1.10.2\n" +
+    private static final String UPDATE_LOG_MD = "# v1.11.0\n" +
             "\n" +
             "### 新增内容\n" +
             "\n" +
@@ -19,6 +19,7 @@ public class AboutHelper {
             "- 添加自动更新检测开关\n" +
             "- 添加图片压缩功能，在媒体列表界面长按图片可进行压缩\n" +
             "- 添加媒体详情查看功能，可从全屏媒体界面中进入\n" +
+            "- 桌面图标长按菜单添加快捷方式\n" +
             "\n" +
             "### 修改和优化的内容\n" +
             "\n" +
