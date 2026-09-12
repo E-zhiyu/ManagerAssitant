@@ -64,6 +64,11 @@ public class AlarmHelper {
         }
     }
 
+    /**
+     * 设置预算重置闹钟
+     *
+     * @param context 上下文
+     */
     public static void setBudgetCheckAlarm(Context context) {
         Intent intent = new Intent(context, BudgetResetReceiver.class);
         LocalDateTime tomorrowStart = LocalDate.now().plusDays(1).atStartOfDay();
