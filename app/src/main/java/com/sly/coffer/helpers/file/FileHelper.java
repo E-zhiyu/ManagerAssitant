@@ -3,7 +3,10 @@ package com.sly.coffer.helpers.file;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.DocumentsContract;
+import android.provider.OpenableColumns;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -235,6 +238,127 @@ public class FileHelper {
         }
 
         return targetFile;
+    }
+
+    /**
+     * 通过 Uri 获取文件大小
+     *
+     * @param context 上下文
+     * @param uri     需要获取大小的文件的 Uri
+     * @return 文件大小，单位为 B
+     */
+    public static long getFileSizeByUri(Context context, Uri uri) {
+        if (context == null || uri == null) {
+            return -1;
+        }
+
+        String scheme = uri.getScheme();
+        if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            try (Cursor cursor = context.getContentResolver().query(
+                    uri,
+                    new String[]{OpenableColumns.SIZE},
+                    null,
+                    null,
+                    null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                    if (sizeIndex != -1 && !cursor.isNull(sizeIndex)) {
+                        return cursor.getLong(sizeIndex);
+                    }
+                }
+            }
+        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            String path = uri.getPath();
+            if (path != null) {
+                java.io.File file = new java.io.File(path);
+                if (file.exists()) {
+                    return file.length();
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * 通过 Uri 获取文件名
+     *
+     * @param context 上下文
+     * @param uri     目标文件的 Uri
+     * @return 文件显示名称
+     */
+    public static String getFileNameByUri(Context context, Uri uri) {
+        if (context == null || uri == null) {
+            return null;
+        }
+
+        String scheme = uri.getScheme();
+        if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            try (Cursor cursor = context.getContentResolver().query(
+                    uri,
+                    new String[]{OpenableColumns.DISPLAY_NAME},
+                    null,
+                    null,
+                    null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int sizeIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (sizeIndex != -1 && !cursor.isNull(sizeIndex)) {
+                        return cursor.getString(sizeIndex);
+                    }
+                }
+            }
+        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            String path = uri.getPath();
+            if (path != null) {
+                int lastSlashIndex = path.lastIndexOf('/');
+                if (lastSlashIndex != -1) {
+                    return path.substring(lastSlashIndex + 1);
+                }
+                return path;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 根据 Uri 获取文件最后修改时间
+     *
+     * @param context 上下文
+     * @param uri     需要获取最后修改时间的文件的 Uri
+     * @return 最后修改时间的时间戳
+     */
+    public static long getLastModifyTimeByUri(Context context, Uri uri) {
+        if (context == null || uri == null) {
+            return -1;
+        }
+
+        String scheme = uri.getScheme();
+        if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            try (Cursor cursor = context.getContentResolver().query(
+                    uri,
+                    new String[]{DocumentsContract.Document.COLUMN_LAST_MODIFIED},
+                    null,
+                    null,
+                    null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int dateIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_LAST_MODIFIED);
+                    if (dateIndex != -1 && !cursor.isNull(dateIndex)) {
+                        return cursor.getLong(dateIndex);
+                    }
+                }
+            }
+        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            String path = uri.getPath();
+            if (path != null) {
+                java.io.File file = new java.io.File(path);
+                if (file.exists()) {
+                    return file.lastModified();
+                }
+            }
+        }
+
+        return -1;
     }
 
     /**

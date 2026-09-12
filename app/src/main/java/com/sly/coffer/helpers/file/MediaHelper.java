@@ -12,9 +12,15 @@ import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
+import androidx.exifinterface.media.ExifInterface;
 
-import com.sly.coffer.auxiliary.classes.MediaFileInfo;
+import com.sly.coffer.auxiliary.classes.CustomDateTimeFormatter;
+import com.sly.coffer.auxiliary.classes.file.MediaDetail;
+import com.sly.coffer.auxiliary.classes.file.MediaFileInfo;
 import com.sly.coffer.auxiliary.enums.DirectoryPaths;
+import com.sly.coffer.data.save.db.converters.DateTimeConverter;
+
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -244,5 +251,105 @@ public class MediaHelper {
         }
 
         return result;
+    }
+
+    /**
+     * 获取媒体文件的详细数据
+     *
+     * @param context 上下文
+     * @param uri     媒体文件的 Uri
+     * @return 媒体文件详细数据
+     */
+    @NonNull
+    @Contract("_, _ -> new")
+    public static MediaDetail getMediaDetail(@NonNull Context context, Uri uri) throws IOException {
+        ContentResolver resolver = context.getContentResolver();
+        int wi = 0, hei = 0, iso = 0;
+        String device = "";
+        double aperture = 0, exp = 0, focalLength = 0;
+        boolean flashFired = false;
+        LocalDateTime time = null;
+
+        //获取文件大小
+        long fileSize = FileHelper.getFileSizeByUri(context, uri);
+
+        //获取文件名
+        String fileName = FileHelper.getFileNameByUri(context, uri);
+
+        //读取 Exif 信息
+        try (InputStream inputStream = resolver.openInputStream(uri)) {
+            if (inputStream != null) {
+                ExifInterface exif = new ExifInterface(inputStream);
+
+                // --- 拍摄时间 / 修改时间 ---
+                String timeStr = exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL); // 优先获取原始拍摄时间
+                if (timeStr != null) {
+                    time = LocalDateTime.parse(timeStr, CustomDateTimeFormatter.DATE_TIME_EXIF);
+                } else {
+                    long lastModified = FileHelper.getLastModifyTimeByUri(context, uri);
+                    time = DateTimeConverter.toLocalDateTime(lastModified);
+                }
+
+                // --- 像素尺寸 ---
+                wi = exif.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0);
+                hei = exif.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0);
+
+                // 处理部分机型拍摄旋转后的宽高属性
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90 || orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                    int temp = wi;
+                    wi = hei;
+                    hei = temp;
+                }
+
+                // --- 拍摄设备 (品牌 & 型号) ---
+                String make = exif.getAttribute(ExifInterface.TAG_MAKE);
+                String model = exif.getAttribute(ExifInterface.TAG_MODEL);
+                if (model != null) device += model;
+                if (make != null) device += (", " + make);
+
+                // --- 光圈大小 ---
+                aperture = exif.getAttributeDouble(ExifInterface.TAG_F_NUMBER, 0.0);
+
+                // --- 快门速度 ---
+                String exposureTime = exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+                if (exposureTime != null) {
+                    try {
+                        exp = Double.parseDouble(exposureTime);
+                    } catch (NumberFormatException e) {
+                        exp = -1;
+                    }
+                } else {
+                    exp = -1;
+                }
+
+                // --- ISO 值 ---
+                iso = exif.getAttributeInt(ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY, 0);
+
+                // --- 焦距 ---
+                focalLength = exif.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, 0.0);
+
+                // --- 是否使用闪光灯 ---
+                int flash = exif.getAttributeInt(ExifInterface.TAG_FLASH, -1);
+                if (flash != -1) {
+                    // 比特位 0 表示闪光灯是否触发 (Flash fired)
+                    flashFired = (flash & 0x1) != 0;
+                }
+            }
+        }
+
+        return new MediaDetail(
+                time,
+                fileSize,
+                wi,
+                hei,
+                fileName,
+                device,
+                aperture,
+                exp,
+                iso,
+                focalLength,
+                flashFired
+        );
     }
 }

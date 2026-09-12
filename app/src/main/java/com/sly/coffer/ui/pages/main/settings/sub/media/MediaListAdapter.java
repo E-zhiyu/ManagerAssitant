@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.sly.coffer.R;
-import com.sly.coffer.auxiliary.classes.MediaFileInfo;
+import com.sly.coffer.auxiliary.classes.file.MediaFileInfo;
 import com.sly.coffer.auxiliary.interfaces.adapter.AdapterOnLongClickListener;
 import com.sly.coffer.auxiliary.interfaces.adapter.ViewHolderListener;
 import com.sly.coffer.databinding.ViewHolderMediaListBinding;

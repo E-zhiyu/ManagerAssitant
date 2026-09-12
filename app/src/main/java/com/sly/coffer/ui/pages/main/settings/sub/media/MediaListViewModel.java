@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.sly.coffer.auxiliary.classes.MediaFileInfo;
+import com.sly.coffer.auxiliary.classes.file.MediaFileInfo;
 import com.sly.coffer.helpers.file.MediaHelper;
 
 import java.util.Collections;

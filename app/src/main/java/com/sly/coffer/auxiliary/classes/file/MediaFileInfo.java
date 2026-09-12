@@ -1,4 +1,4 @@
-package com.sly.coffer.auxiliary.classes;
+package com.sly.coffer.auxiliary.classes.file;
 
 import android.net.Uri;
 

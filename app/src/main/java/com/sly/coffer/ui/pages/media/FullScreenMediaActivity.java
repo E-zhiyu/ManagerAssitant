@@ -1,5 +1,6 @@
 package com.sly.coffer.ui.pages.media;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
@@ -150,6 +151,21 @@ public class FullScreenMediaActivity extends AppCompatActivity {
         //分享媒体
         binding.shareMediaBtn.setOnClickListener(v -> sharePicture());
         AppearanceHelper.attachMorphAnimation(binding.shareMediaBtn);
+
+        //图片详情
+        binding.infoBtn.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            String currentUriStr = "";
+            if (mediaUriStrings != null) {
+                currentUriStr = mediaUriStrings[binding.viewPager2.getCurrentItem()];
+            }
+            bundle.putString(KeyStrings.FILE_URIS.v(), currentUriStr);
+
+            Intent intent = new Intent(this, MediaInfoActivity.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
+        AppearanceHelper.attachMorphAnimation(binding.infoBtn);
     }
 
     /**
