@@ -20,9 +20,7 @@ public class NotificationHelper {
      * @param context 上下文
      */
     public static void createNotificationChannels(@NonNull Context context) {
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
         for (ChannelInfo info : ChannelInfo.values()) {
             NotificationChannel channel = info.getNotificationChannel();
             notificationManager.createNotificationChannel(channel);
@@ -49,5 +47,14 @@ public class NotificationHelper {
             //发送通知
             NotificationManagerCompat.from(context).notify(notificationID, builder.build());
         }
+    }
+
+    /**
+     * 取消通知
+     *
+     * @param notificationId 需要取消的通知的唯一标识符
+     */
+    public static void cancelNotification(int notificationId, Context context) {
+        NotificationManagerCompat.from(context).cancel(notificationId);
     }
 }

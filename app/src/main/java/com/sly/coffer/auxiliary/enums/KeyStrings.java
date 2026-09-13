@@ -1,6 +1,9 @@
 package com.sly.coffer.auxiliary.enums;
 
 public enum KeyStrings {
+    RESTORE_IS_OLD_DATA("restore_is_old_data"),             //导入数据时是否为旧数据
+    BACKUP_CHOICES("backup_choices"),                       //备份时的选择情况
+    BACKUP_TARGET("backup_target"),                         //备份时的目标文件(夹)
     RUNNING_EXPORT_ACCOUNT("running_export_account"),       //流水转出账户
     RUNNING_IMPORT_ACCOUNT("running_import_account"),       //流水转入账户
     RUNNING_TYPE("running_type"),                           //流水种类

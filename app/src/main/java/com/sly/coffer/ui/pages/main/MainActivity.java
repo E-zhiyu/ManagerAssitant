@@ -1,6 +1,7 @@
 package com.sly.coffer.ui.pages.main;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.search.SearchView;
 import com.sly.coffer.R;
+import com.sly.coffer.auxiliary.enums.LogTags;
+import com.sly.coffer.data.save.preference.VersionPreference;
 import com.sly.coffer.databinding.ActivityMainBinding;
 import com.sly.coffer.data.save.preference.AppSettingsPreference;
 import com.sly.coffer.helpers.UpdateHelper;
@@ -59,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
         initViews();
 
-        //启动主界面时自动检测更新（不一定触发）
-        final int MODULAR = 2;
-        if (System.currentTimeMillis() % MODULAR == 0) {
+        //启动主界面时自动检测更新
+        if (VersionPreference.getAutoUpdateCheck(this)) {
+            Log.d(LogTags.MAIN_ACTIVITY.n(), "自动检测更新中……");
             UpdateHelper.checkUpdate(this, disposable, false);
         }
     }

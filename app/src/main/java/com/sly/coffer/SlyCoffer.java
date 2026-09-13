@@ -16,7 +16,7 @@ import androidx.work.WorkManager;
 
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.color.DynamicColorsOptions;
-import com.sly.coffer.automation.workers.BackupWorker;
+import com.sly.coffer.automation.workers.backup.BackupWorker;
 import com.sly.coffer.auxiliary.enums.TagStrings;
 import com.sly.coffer.auxiliary.enums.settings.AuthOpportunity;
 import com.sly.coffer.data.save.preference.AutoBackupPreference;
@@ -27,6 +27,7 @@ import com.sly.coffer.auxiliary.enums.LogTags;
 import com.sly.coffer.auxiliary.enums.settings.BackupFrequency;
 import com.sly.coffer.helpers.NotificationHelper;
 import com.sly.coffer.automation.workers.WorkerScheduler;
+import com.sly.coffer.helpers.ShortcutHelper;
 import com.sly.coffer.helpers.appearence.ThemeHelper;
 import com.sly.coffer.helpers.file.FileHelper;
 import com.sly.coffer.helpers.time.AlarmHelper;
@@ -45,8 +46,9 @@ public class SlyCoffer extends Application {
         //注册预算重置检查闹钟
         AlarmHelper.setBudgetCheckAlarm(this);
 
-        //注册通知渠道
+        //动态注册（通知渠道、快捷方式）
         NotificationHelper.createNotificationChannels(this);
+        ShortcutHelper.buildShortcuts(this);
 
         if (getProcessName().equals(getPackageName())) {
             //初始化动态配色
@@ -130,7 +132,7 @@ public class SlyCoffer extends Application {
      */
     private void removeTaskFromRecents() {
         Log.d(LogTags.APPLICATION.n(), "触发最近任务隐藏");
-        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager am = getSystemService(ActivityManager.class);
         if (am != null) {
             List<ActivityManager.AppTask> taskList = am.getAppTasks();
             if (taskList != null) {

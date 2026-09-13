@@ -28,20 +28,4 @@ public class ImmHelper {
             }, 300); // 稍微长一点的延迟，确保布局彻底稳定
         }
     }
-
-    /**
-     * 隐藏输入法
-     *
-     * @param view 需要隐藏输入法的视图
-     */
-    public static void hideImm(@NonNull View view) {
-        Context context = view.getContext();
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm == null) {
-            return;
-        }
-
-        view.clearFocus();
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
 }
