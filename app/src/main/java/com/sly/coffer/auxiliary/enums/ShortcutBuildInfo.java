@@ -8,14 +8,26 @@ import androidx.annotation.StringRes;
 
 import com.sly.coffer.R;
 import com.sly.coffer.ui.pages.main.bookkeeping.RunningAccountInputActivity;
+import com.sly.coffer.ui.pages.report.ReportActivity;
 
 import java.util.function.Function;
 
 public enum ShortcutBuildInfo {
+    CHECK_REPORT(
+            R.string.check_report,
+            "check_report",
+            R.drawable.outline_table_eye_24,
+            context -> {
+                Intent intent = new Intent(context, ReportActivity.class);
+                intent.setAction(Intent.ACTION_VIEW);
+                return intent;
+            },
+            true
+    ),
     ADD_RUNNING_ACCOUNT(
             R.string.add_running_account,
             "add_running_account",
-            R.drawable.baseline_attach_money_24,
+            R.drawable.outline_attach_money_24,
             context -> {
                 Intent intent = new Intent(context, RunningAccountInputActivity.class);
                 intent.setAction(Intent.ACTION_VIEW);
